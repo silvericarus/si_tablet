@@ -1,0 +1,88 @@
+:root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2147483647;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: system-ui, Segoe UI, Roboto, sans-serif;
+  color: var(--text);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+}
+
+.tablet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 900px;
+  height: 560px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, var(--panel), var(--panel-2));
+  border-radius: var(--radius);
+  border: 1px solid #222;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.topbar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid #222;
+}
+
+.title {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+.close {
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.close:hover {
+  background: #222;
+}
+
+.view {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+}
+
+.screen h1 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+.screen p,
+.screen li {
+  color: #ddd;
+}

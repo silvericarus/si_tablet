@@ -1,22 +1,23 @@
-fx_version('cerulean')
-games({ 'gta5' })
+fx_version 'cerulean'
+game 'gta5'
+lua54 'yes'
 
-shared_script('config/config.lua');
+name 'si_tablet'
+author 'silvericarus'
+version '0.1.0'
 
-server_scripts({
-    'server/server.lua'
-});
+ui_page 'web/index.html'
 
-client_scripts({
-    'client/client.lua'
-});
+files {
+    'web/index.html',
+    'web/*'
+}
 
-ui_page('html/index.html')
+server_scripts {
+    'server/audit.lua'
+}
 
-files({
-    'ui/index.html',
-    'ui/styles.css',
-    'ui/main.js',
-    'ui/assets/*.png',
-    'ui/assets/*.woff2'
-})
+client_scripts {
+    'client/core_bus.lua',
+    'client/core_ui.lua'
+}
