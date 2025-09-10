@@ -6,6 +6,3 @@
   <img src="https://badge.eu.org/github/license/silvericarus/si_decisions"/>
   <!--<img src="https://badge.eu.org/static/tag/5c5c5c/v1.0/FF6F00?icon=tag&opacity=0.8"/>-->
 </p>
-
-## Thanks
-The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the [Creative Commons 3.0](https://creativecommons.org/licenses/by/3.0/) Attribution License.
