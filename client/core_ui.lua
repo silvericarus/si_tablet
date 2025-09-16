@@ -11,6 +11,7 @@ local function setVisible(state)
     send({ type = "tablet:visible", value = state })
 
     if state then
+        TriggerServerEvent('si_tablet:requestScopes')
         exports['si_tablet']:SendAppsToNui()
         send({ type = "tablet:navigate", route = "/home" })
     end
@@ -19,8 +20,6 @@ end
 RegisterNUICallback('requestApps', function(_, cb)
     if exports[resourceName] and exports[resourceName].SendAppsToNui then
         exports[resourceName]:SendAppsToNui()
-    else
-        print(('WARNING: export SendAppsToNui no encontrado en %s'):format(resourceName))
     end
     cb({ ok = true })
 end)

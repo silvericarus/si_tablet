@@ -17,7 +17,8 @@ files {
 }
 
 server_scripts {
-    'server/audit.lua'
+    'server/audit.lua',
+    'server/scopes.lua'
 }
 
 client_scripts {

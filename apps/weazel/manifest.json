@@ -6,5 +6,5 @@
   "routes": [
     { "path": "/weazel", "label": "Redacción" }
   ],
-  "scopes": ["job:weazel"]
+  "scopes": ["job:weazel", "ace:group.admin" ]
 }

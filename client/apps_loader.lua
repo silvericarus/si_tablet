@@ -1,5 +1,6 @@
 local resourceName = GetCurrentResourceName()
-local Apps = {}
+local AppsRaw, AppsFiltered = {}, {}
+local Scopes = {}
 local loaded = false
 
 local function readFile(path)
@@ -51,26 +52,39 @@ local function loadManifest(appName)
     return man
 end
 
+local function hasAllScopes(req)
+    if not req or #req == 0 then return true end
+    for _, scope in ipairs(req) do
+        if not Scopes[scope] then return false end
+    end
+    return true
+end
+
+local function refilter()
+    AppsFiltered = {}
+    for _, app in ipairs(AppsRaw) do
+        if hasAllScopes(app.scopes) then
+            AppsFiltered[#AppsFiltered + 1] = app
+        end
+    end
+end
+
 local function loadAllManifests()
+    AppsRaw = {}
     local list = loadIndex()
     for _, appName in ipairs(list) do
         local man = loadManifest(appName)
-        if man then
-            table.insert(Apps, man)
-        else
-            print(("Failed to load manifest for app '%s'"):format(appName))
-        end
+        if man then AppsRaw[#AppsRaw + 1] = man end
     end
-    print(("Loaded %d app manifests"):format(#Apps))
     loaded = true
 end
 
 local function sendAppsToNui()
     if not loaded then loadAllManifests() end
-    print(('send_apps_to_nui → %d apps'):format(#Apps))
+    refilter()
     SendNUIMessage({
         type = "tablet:apps",
-        apps = Apps
+        apps = AppsFiltered
     })
 end
 
@@ -79,6 +93,11 @@ CreateThread(function()
 end)
 
 exports('SendAppsToNui', function()
+    sendAppsToNui()
+end)
+
+RegisterNetEvent('si_tablet:scopesResponse', function(map)
+    Scopes = map or {}
     sendAppsToNui()
 end)
 
