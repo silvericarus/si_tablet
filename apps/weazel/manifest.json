@@ -2,7 +2,7 @@
   "name": "weazel",
   "title": "Weazel News",
   "version": "1.0.0",
-  "icon": "nui://tablet-core/apps/weazel/icon.png",
+  "icon": "nui://si_tablet/apps/weazel/icon.svg",
   "routes": [
     { "path": "/weazel", "label": "Redacción" }
   ],

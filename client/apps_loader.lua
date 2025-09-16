@@ -69,7 +69,7 @@ local function sendAppsToNui()
     if not loaded then loadAllManifests() end
     print(('send_apps_to_nui → %d apps'):format(#Apps))
     SendNUIMessage({
-        action = "tablet:apps",
+        type = "tablet:apps",
         apps = Apps
     })
 end
