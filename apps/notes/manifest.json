@@ -1,0 +1,10 @@
+{
+  "name": "notes",
+  "title": "Notas",
+  "version": "1.0.0",
+  "icon": "nui://tablet-core/apps/notes/icon.png",
+  "routes": [
+    { "path": "/notes", "label": "Notas" }
+  ],
+  "scopes": []
+}

@@ -5,6 +5,21 @@
   align-items: center;
   justify-content: center;
   z-index: 2147483647;
+  --tablet-radius: 24px; 
+  --screen-orange-1: #FFA726;
+  --screen-orange-2: #F57C00;
+  --screen-black:    #000000;
+  --bezel: 14px;
+  --shell-top: #0f0f10;
+  --shell-bot: #0a0a0b;
+  --md-sys-color-surface: #121314;
+  --md-sys-color-surface-container: #18191b;
+  --md-sys-color-on-surface: #eef0f3;
+  --md-sys-color-outline-variant: #2e3135;
+  --md-sys-color-primary: #ff7a00;
+  --md-elev-1: 0 2px 6px rgba(0,0,0,.35);
+  --md-elev-2: 0 6px 18px rgba(0,0,0,.45);
+  --screen-radius: calc(var(--tablet-radius) - var(--bezel));
 }
 
 * {
@@ -40,42 +55,103 @@ body {
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, var(--panel), var(--panel-2));
-  border-radius: var(--radius);
+  border-radius: var(--tablet-radius);
   border: 1px solid #222;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   overflow: hidden;
+  padding: var(--bezel); 
+}
+
+.tablet::after {
+  content:"";
+  position:absolute;
+  inset: var(--bezel);
+  border-radius: calc(var(--tablet-radius) - var(--bezel));
+  background: radial-gradient(
+    circle at 40% 20%,
+    var(--screen-orange-1) 0%,
+    var(--screen-orange-2) 35%,
+    var(--screen-black)   100%
+  );
+  box-shadow: inset 0 0 0 1px #222;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.tablet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 2px #1f1f1f,
+    inset 0 0 0 10px #0f0f0f40;
+}
+
+.topbar, .view{
+  position: relative; z-index: 1;
+  background: transparent; color: #fff;
 }
 
 .topbar {
-  height: 56px;
+  position: relative;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 16px;
-  border-bottom: 1px solid #222;
+  gap: 10px;
+  margin: 0 0 8px;
+  padding: 0 12px;
+  background:
+    color-mix(in srgb, var(--md-sys-color-surface) 78%, var(--md-sys-color-primary) 22%);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  border-radius: var(--screen-radius) var(--screen-radius) 0 0;
+  box-shadow: var(--md-elev-2);
+  backdrop-filter: blur(8px) saturate(1.05);
+  -webkit-backdrop-filter: blur(8px) saturate(1.05);
+}
+
+.topbar .close{
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px; height: 36px;
+  display: grid; place-items: center;
+  border: 0; outline: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  transition: background .12s ease, transform .08s ease;
+}
+
+.topbar .close:hover   { background: #ffffff18; }
+.topbar .close:active  { background: #ffffff26; transform: translateY(-50%) scale(.96); }
+
+.topbar::before{
+  content:"";
+  position:absolute; left:50%; top:50%;
+  width:7px; height:7px; border-radius:50%;
+  transform: translate(-50%, -50%);
+  background: #1b1b1d;
+  box-shadow:
+    0 0 0 2px #0008,
+    0 0 10px #0006;
+  pointer-events:none;
 }
 
 .title {
   font-weight: 600;
   letter-spacing: 0.3px;
 }
-.close {
-  background: transparent;
-  border: 0;
-  color: var(--text);
-  font-size: 20px;
-  cursor: pointer;
-  padding: 6px 10px;
-  border-radius: 8px;
-}
-.close:hover {
-  background: #222;
-}
 
 .view {
   flex: 1;
   overflow: auto;
-  padding: 16px;
+  padding: 48px;
+  color: #fff;
 }
 
 .screen h1 {
@@ -86,3 +162,46 @@ body {
 .screen li {
   color: #ddd;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: #151515;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 16px 12px;
+  cursor: pointer;
+  transition: transform .08s ease, border-color .08s ease;
+}
+.tile:hover { transform: translateY(-2px); border-color: #333; }
+
+.tile-icon {
+  width: 64px; height: 64px;
+  display: grid; place-items: center;
+  background: #0f0f0f;
+  border: 1px solid #222;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.tile-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+.tile-fallback {
+  width: 100%; height: 100%;
+  display: grid; place-items: center;
+  font-weight: 800; font-size: 22px; color: #bbb;
+}
+
+.tile-title {
+  font-size: 14px; color: #ddd; text-align: center;
+  line-height: 1.2;
+}
+

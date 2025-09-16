@@ -9,12 +9,21 @@ local function setVisible(state)
     isOpen = state
     SetNuiFocus(state, state)
     send({ type = "tablet:visible", value = state })
-    print('[baseline] toggle ->', state and 'open' or 'close')
 
     if state then
+        exports['si_tablet']:SendAppsToNui()
         send({ type = "tablet:navigate", route = "/home" })
     end
 end
+
+RegisterNUICallback('requestApps', function(_, cb)
+    if exports[resourceName] and exports[resourceName].SendAppsToNui then
+        exports[resourceName]:SendAppsToNui()
+    else
+        print(('WARNING: export SendAppsToNui no encontrado en %s'):format(resourceName))
+    end
+    cb({ ok = true })
+end)
 
 RegisterCommand("tablet", function()
     setVisible(not isOpen)
@@ -28,13 +37,9 @@ RegisterNUICallback("uiClose", function(_, cb)
 end)
 
 RegisterNUICallback("uiReady", function(_, cb)
-    print("[si_tablet] UI Ready")
+    print("UI Ready")
     cb({ ok = true, resource = resourceName })
 end)
-
-RegisterCommand('tablet_force', function()
-    send({ type = 'tablet:force' })
-end, false)
 
 AddEventHandler("onResourceStop", function(resource)
     if resource == resourceName then
