@@ -1,3 +1,5 @@
-body {
-    background: #5ae65a;
+.notes-wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
