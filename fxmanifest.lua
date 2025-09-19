@@ -11,9 +11,11 @@ ui_page 'web/index.html'
 files {
     'web/*',
     'web/**/*',
-    'apps/**/icon.*',
     'apps/index.json',
-    'apps/**/manifest.json'
+    'apps/**/manifest.json',
+    'apps/**/ui.js',
+    'apps/**/style.css',
+    'apps/**/icon.*',
 }
 
 server_scripts {

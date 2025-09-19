@@ -1,7 +1,11 @@
-const RES =
+let RES =
   typeof GetParentResourceName === "function"
     ? GetParentResourceName()
-    : GetCurrentResourceName();
+    : "si_tablet";
+let CURRENT_ROUTE = '/home';
+let CURRENT_APP = null;
+const APP_MODULES = new Map();
+const APP_LOADING = new Map();
 
 function nui(name, data = {}) {
   return fetch(`https://${RES}/${name}`, {
@@ -12,6 +16,20 @@ function nui(name, data = {}) {
     body: JSON.stringify(data),
   });
 }
+
+function waitForApp(name){
+  if (APP_MODULES.has(name)) return Promise.resolve(APP_MODULES.get(name));
+  if (APP_LOADING.has(name)) return APP_LOADING.get(name).promise;
+  let resolve; const promise = new Promise(r => (resolve=r));
+  APP_LOADING.set(name, { promise, resolve });
+  return promise;
+}
+
+nui("uiReady").then(r=>r.json()).then(({resource})=>{
+  if (resource && typeof resource === "string" ){
+    RES = resource;
+  }
+}).catch(()=>{});
 
 const routes = {
   "/home": () => renderHome(),
@@ -64,13 +82,6 @@ function buildDynamicRoutes() {
       const path = typeof r === "string" ? r : r.path;
       if (!path || routes[path]) continue;
       const title = app.title || app.name || "App";
-      routes[path] = () => `
-        <div class="screen">
-          <h1>${title}</h1>
-          <p>Ruta: <code>${path}</code></p>
-          <p>(Placeholder generado desde manifest.json)</p>
-        </div>
-        `;
     }
   }
 }
@@ -94,7 +105,6 @@ window.addEventListener("message", (event) => {
     render(d.route);
   } else if (d.type === "tablet:apps") {
     APP_REGISTRY = Array.isArray(d.apps) ? d.apps : [];
-    console.log("Received apps:", d.apps.length);
     buildDynamicRoutes();
     if (overlay.style.display !== "none") {
       render("/home");
@@ -113,3 +123,9 @@ window.addEventListener("keydown", (event) => {
 });
 
 nui("uiReady").catch(() => {}); // Ignore errors
+
+window.__si_register_app = function (name, mod) {
+  APP_MODULES.set(name, mod || {});
+  const w = APP_LOADING.get(name);
+  if (w) { w.resolve(mod); APP_LOADING.delete(name); }
+};
