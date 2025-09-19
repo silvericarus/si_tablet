@@ -2,7 +2,9 @@
   "name": "notes",
   "title": "Notas",
   "version": "1.0.0",
-  "icon": "nui://si_tablet/apps/notes/icon.svg",
+  "icon": "icon.svg",
+  "ui": "ui.js",
+  "style": "style.css",
   "routes": [
     { "path": "/notes", "label": "Notas" }
   ],
