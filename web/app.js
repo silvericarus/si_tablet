@@ -11,6 +11,8 @@ const ROUTE_APP = new Map();
 const DYNAMIC_ROUTES = new Set();
 let RENDER_TOKEN = 0;
 
+const SHARED_BUS = createEventBus();
+
 function nui(name, data = {}) {
   return fetch(`https://${RES}/${name}`, {
     method: "POST",
@@ -246,11 +248,62 @@ function createAppSdk(app) {
       if (typeof route === "string") {
         render(route).catch((err) => console.error(err));
       }
-    },
+	  },
+	bus: SHARED_BUS,
     app: app || null,
     nui,
   };
 }
+
+function createEventBus() {
+	const listeners = new Map();
+	
+	function off(event, callback) {
+		if (typeof event !== "string" || typeof callback !== "function") return;
+
+		const callbacks = listeners.get(event);
+		if (!callbacks) return;
+
+		if (callbacks.size === 0) callbacks.delete(event);
+	}
+
+	return {
+		on(event, callback) {
+			if (typeof event !== "string" || typeof callback !== "function") return;
+
+			let callbacks = listeners.get(event);
+			if (!callbacks) {
+				callbacks = new Set();
+				listeners.set(event, callbacks);
+			}
+
+			callbacks.add(callback);
+			let active = true;
+
+			return () => {
+				if (!active) return;
+				active = false;
+				off(event, callback);
+			};
+		},
+		off,
+		emit(event, payload) {
+			if (typeof event !== "string") return;
+			const handlers = listeners.get(event);
+			if (!handlers || handlers.size === 0) return;
+
+			const callbacks = Array.from(handlers);
+			for (const cb of callbacks) {
+				try {
+					cb(payload);
+				} catch (err) {
+					console.error(`[bus] Error en el handler de "${event}":`,err);
+				}
+			}
+		},
+	};
+}
+
 
 async function renderAppRoute(app, path, token) {
   if (
